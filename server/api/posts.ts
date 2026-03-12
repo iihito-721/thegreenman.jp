@@ -5,7 +5,9 @@ import matter from 'gray-matter'
 export default defineEventHandler(async (event) => {
   try {
     const contentDir = join(process.cwd(), 'content', 'the-rocker-room')
-    const files = readdirSync(contentDir).filter(file => file.endsWith('.md'))
+    const files = readdirSync(contentDir)
+      .filter(file => file.endsWith('.md'))
+      .filter(file => !file.startsWith('._'))
     
     const posts = files.map(file => {
       const filePath = join(contentDir, file)

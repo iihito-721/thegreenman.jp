@@ -21,10 +21,21 @@
 			<ul class="p-postList">
 			<li v-for="post in posts" :key="post._path" class="p-postList__item">
 				<div class="p-postList__meta">
-					<p class="p-postList__title is--fred js-repeat-text">{{ repeatText(post.bgtitle.trim() + ' ', 10) }}</p>
-					<p class="p-postList__subtitle is--baby js-repeat-text">{{ repeatText(post.bgtext, 60) }}</p>
+					<p class="p-postList__title is--fred js-repeat-text">
+						{{ repeatText(((post.bgtitle || '').trim() + ' '), 10) }}
+					</p>
+					<p class="p-postList__subtitle is--baby js-repeat-text">
+						{{ repeatText(post.bgtext || '', 60) }}
+					</p>
 				</div>
-				<a :href="post._path" class="p-postList__thumb c-imageWrap" :data-displacement="`/images/displacement/${post.displacement}.jpg`" data-intensity="-0.65" data-speedIn="1.2" data-speedOut="1.2">
+				<a
+					:href="post._path"
+					class="p-postList__thumb c-imageWrap"
+					:data-displacement="`/images/displacement/${post.displacement}.jpg`"
+					data-intensity="-0.65"
+					data-speedIn="1.2"
+					data-speedOut="1.2"
+				>
 					<img class="p-postList__img c-imageContainer" :src="post.cover" :alt="post.title">
 					<img class="p-postList__img c-imageContainer" :src="post.hover" :alt="post.title">
 				</a>
@@ -85,6 +96,9 @@ interface Post {
   hover: string;
   copyText: string;
   content: string;
+  bgtitle?: string;
+  bgtext?: string;
+  displacement?: string;
 }
 
 const { data: posts } = await useAsyncData('posts', () => 

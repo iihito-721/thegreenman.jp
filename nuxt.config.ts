@@ -7,7 +7,8 @@ export default defineNuxtConfig({
   content: {
     experimental: {
       nativeSqlite: true
-    }
+    },
+    ignores: ['**/._*']
   },
 
   // Node.jsの警告を非表示に

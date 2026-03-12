@@ -1,1 +1,1 @@
-export { default } from "file:///Volumes/SSD%20bk/WORKS/tgm/thegreenman-dev/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"
+export { default } from "file:///Users/nats/Sites/thegreenman-dev/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"

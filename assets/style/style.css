@@ -273,8 +273,8 @@ Post
 .p-related__list{position:relative;padding:25vh 2vw;width:100%;display:flex;flex-wrap:wrap;}
 .p-related__item{position:relative;width:calc(100% / 4);background-color:#FFF;;}
 .p-related__link{position:relative;display:flex;flex-direction:column-reverse;}
-.p-related__thumb{position:relative;width:100%;height:auto;overflow:hidden;background-color:#FFF;}
-.p-related__img{position:relative;width:100%;height:auto;transition:transform 1s cubic-bezier(0, 1, 0.9, 1), opacity .2s ease-out;}
+.p-related__thumb{position:relative;width:100%;height:auto;overflow:hidden;background-color:#FFF; aspect-ratio: 1/1;}
+.p-related__img{position:relative;width:100%;height:100%;transition:transform 1s cubic-bezier(0, 1, 0.9, 1), opacity .2s ease-out;object-fit:cover;}
 .p-related__body{position:relative;padding:30px 2vw;}
 .p-related__itemTitle{position:relative;padding-right:50%;font-size:12px;line-height:1.5;color:#111;}
 
