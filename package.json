@@ -1,0 +1,25 @@
+{
+  "name": "thegreenman-dev",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "deploy": "npm run generate && lftp -f scripts/deploy.lftp"
+  },
+  "devDependencies": {
+    "nuxt": "^3.17.5"
+  },
+  "dependencies": {
+    "@nuxt/content": "^3.6.1",
+    "better-sqlite3": "^11.10.0",
+    "gray-matter": "^4.0.3",
+    "gsap": "^3.13.0",
+    "hover-effect": "^1.2.1",
+    "html2canvas": "^1.4.1",
+    "picomatch": "^4.0.2",
+    "three": "^0.164.1"
+  }
+}

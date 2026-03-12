@@ -1,0 +1,9 @@
+set ftp:ssl-allow no
+set ftp:passive-mode yes
+open ftp://sd0046529@gmoserver.jp:shun1028#@ftp.gmoserver.jp:21
+cd /thegreenman.jp/
+lcd .output/public
+# mirror -R: ローカル→リモート、--delete: リモートの不要ファイル削除、--only-newer: 差分のみ転送
+mirror -R --delete --only-newer --verbose
+bye
+
