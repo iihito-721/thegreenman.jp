@@ -1,4 +1,4 @@
-name: Deploy to production (SFTP)
+name: Deploy to production (FTP)
 
 on:
   push:
@@ -27,14 +27,13 @@ jobs:
       - name: Generate static site
         run: npm run generate
 
-      - name: Deploy via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          username: ${{ secrets.SFTP_USERNAME }}
-          server: ${{ secrets.SFTP_SERVER }}
-          port: ${{ secrets.SFTP_PORT }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          local_path: './.output/public/*'
-          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
-          sftpArgs: '-o ConnectTimeout=5'
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: .output/public/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          dangerous-clean-slate: false
 
