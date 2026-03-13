@@ -61,4 +61,4 @@ ACミラン、ユベントス、アヤックス、バイエルン、ドイツ代
 					
 <img class="p-postThumb__img c-imageContainer" src="/images/the-rocker-room/sampdoria-1995-serieA/L1003708_s-2000.jpg" alt="サンプドリアユニフォーム">
 
-<p class="p-postContents__text c-postContents__text02">だけど私はThe Gunners。<br style="display:block!important;">グリーンマンのNatsでした。</p>
+<p class="p-postContents__text c-postContents__text02">だけど私はThe Gunners。<br style="display:block!important;">グリーンマンのN<span class="mr-01">a</span>tsでした。</p>
