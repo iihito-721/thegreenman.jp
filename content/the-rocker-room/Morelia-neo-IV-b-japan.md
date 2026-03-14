@@ -36,4 +36,6 @@ copyText: |
 <p class="p-postContents__text c-postContents__text01"></p>
 <img class="p-postThumb__img c-imageContainer" src="/images/the-rocker-room/Morelia-neo-IV-b-japan/L1200659_s.jpg" alt="モレリアネオIV β JAPAN">
 
+<p class="p-postContents__text c-postContents__text01">MIZUNO MORELIA NEO IV β JAPAN<br>/ ミズノ モレリア ネオ 4 ベータ ジャパン</p>
+
 <p class="p-postContents__text c-postContents__text02">グリーンマンのN<span class="mr-01">a</span>tsでした。</p>

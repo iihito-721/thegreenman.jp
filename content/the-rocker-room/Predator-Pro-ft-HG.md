@@ -46,4 +46,6 @@ copyText: |
 <p class="p-postContents__text c-postContents__text01"></p>
 <img class="p-postThumb__img c-imageContainer" src="/images/the-rocker-room/Predator-Pro-ft-HG/L1290340_s.jpg" alt="アディダスプレデターPROフローティングタンHG/AG">
 
+<p class="p-postContents__text c-postContents__text01">ADIDAS PREDATOR PRO FT HG・AG<br>/ アディダス プレデター プロ フローティングタン ハードグラウンド・人工芝</p>
+
 <p class="p-postContents__text c-postContents__text02">グリーンマンのN<span class="mr-01">a</span>tsでした。</p>
