@@ -7,7 +7,7 @@ cover: /images/the-rocker-room/sampdoria-1995-serieA/20250820_02_s-1714.jpg
 hover: /images/the-rocker-room/sampdoria-1995-serieA/L1003708_s-2000.jpg
 displacement: '2'
 bgtitle: UC Sampdoria 1995 SerieA UC Sampdoria 1995 SerieA
-bgtext: sampdoria 1995 serieA
+bgtext: Sampdoria 1995　
 date: 2025.9.1
 copyText: |
   １９９５年、中学１年<br>

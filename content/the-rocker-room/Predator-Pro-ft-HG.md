@@ -3,8 +3,8 @@ title: PREDATOR PRO FT HG・AG / ADIDAS
 description: アディダスプレデターPROフローティングタンHG/AG
 slug: Predator-Pro-ft-HG
 tags: ["adidas","predator","red"]
-cover: /images/the-rocker-room/Predator-Pro-ft-HG/L1290341_s.jpg
-hover: /images/the-rocker-room/Predator-Pro-ft-HG/L1290374_s.jpg
+cover: /images/the-rocker-room/Predator-Pro-ft-HG/L1290341_s-cover.jpg
+hover: /images/the-rocker-room/Predator-Pro-ft-HG/L1290349_s-cover.jpg
 displacement: '2'
 bgtitle: PREDATOR PRO FT HG・AG / ADIDAS
 bgtext: Predator　 

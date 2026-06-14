@@ -3,15 +3,15 @@ title: NIKE Zoom Mercurial Superfly 10 Elite FG
 description: ナイキマーキュリアルスーパーフライ10エリートファームグラウンド
 slug: Mercurial-Superfly-10-Elite
 tags: ["NIKE","ナイキ","マーキュリアル","Mercurial"]
-cover: /images/the-rocker-room/Mercurial-Superfly-10-Elite/L1004539_s-e.jpg
-hover: /images/the-rocker-room/Mercurial-Superfly-10-Elite/L1230048_s-2.jpg
+cover: /images/the-rocker-room/Mercurial-Superfly-10-Elite/L1004539_s-cover.jpg
+hover: /images/the-rocker-room/Mercurial-Superfly-10-Elite/L1230048_s-cover.jpg
 displacement: '1'
 bgtitle: NIKE Zoom Mercurial Superfly 10 Elite FG
-bgtext: Light on foot. Lethal on goal - - - 
+bgtext: Superfly　
 date: 2025.10.7
 copyText: |
-  マーキュリアルは<br>
-  やはりと言うべきか<br>
+  マーキュリアル<br>
+  最先端を進む<br>
   傑作
 ---
 
