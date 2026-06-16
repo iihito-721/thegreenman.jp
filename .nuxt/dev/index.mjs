@@ -1493,7 +1493,7 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 }
 
 const checksums = {
-  "rockerRoom": "v3.5.0--61Ndw8iWSAVQKCfJxcCGpy4rc85ixQ8kQpT4EteTH4U"
+  "rockerRoom": "v3.5.0--szlMWBL8rTddkcwl8ajIaB0xRnjRADrbitU4S01JN8Q"
 };
 const checksumsStructure = {
   "rockerRoom": "wbgtmbaq0fyEpCH2hLuXNF_dLz2ova6WHbGToO0fpzA"

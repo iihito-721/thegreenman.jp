@@ -19,7 +19,7 @@
 			<div class="p-post__next" :class="{ 'is--hide': isLastItemReached }">NEXT<span><</span><span><</span><span><</span></div>
 		
 			<ul class="p-postList">
-			<li v-for="post in posts" :key="post._path" class="p-postList__item">
+			<li v-for="(post, index) in posts" :key="post._path" class="p-postList__item">
 				<div class="p-postList__meta">
 					<p class="p-postList__title is--fred js-repeat-text">
 						{{ repeatText(((post.bgtitle || '').trim() + ' '), 10) }}
@@ -36,8 +36,20 @@
 					data-speedIn="1.2"
 					data-speedOut="1.2"
 				>
-					<img class="p-postList__img c-imageContainer" :src="post.cover" :alt="post.title">
-					<img class="p-postList__img c-imageContainer" :src="post.hover" :alt="post.title">
+					<img
+						class="p-postList__img c-imageContainer"
+						:src="post.cover"
+						:alt="post.title"
+						:loading="index === 0 ? 'eager' : 'lazy'"
+						decoding="async"
+					>
+					<img
+						class="p-postList__img c-imageContainer"
+						:src="post.hover"
+						:alt="post.title"
+						loading="lazy"
+						decoding="async"
+					>
 				</a>
 				<div class="p-postList__body">
 					<p class="p-postList__text js-typing" v-html="post.copyText"></p>

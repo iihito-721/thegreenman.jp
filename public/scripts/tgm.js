@@ -252,7 +252,7 @@ const keptCanvases = new Set();
 
 // スマホでの初期化頻度制限
 let lastInitTime = 0;
-const INIT_COOLDOWN = 2000; // 元の設定に戻す
+const INIT_COOLDOWN = 800;
 
 // メモリ使用量監視（スマホクラッシュ対策）
 let memoryCheckInterval;
@@ -292,6 +292,70 @@ function forceCleanupOldResources() {
   window.intersectionObservers.add(observer);
 }
 
+// Canvas表示と<img>差し替え（テクスチャ準備完了後に呼ぶ）
+function revealThumbCanvas(el, hoverEffect, imgs) {
+  const postItem = el.closest('.p-postList__item');
+  if (!postItem || !hoverEffectInstances.has(el)) {
+    isInitializing.delete(el);
+    return;
+  }
+
+  if (hoverEffect.uniforms && hoverEffect.uniforms.dispFactor) {
+    hoverEffect.uniforms.dispFactor.value = 0;
+  }
+
+  hoverEffect.onResize(true);
+
+  if (hoverEffect.resizeHandler) {
+    window.addEventListener('resize', hoverEffect.resizeHandler);
+  }
+
+  // 先にCanvasを描画してから<img>を隠す（白抜け防止）
+  hoverEffect.fadeIn();
+
+  requestAnimationFrame(() => {
+    if (!hoverEffectInstances.has(el)) return;
+
+    postItem.dataset.renderReady = 'true';
+    imgs[0].style.display = 'none';
+    imgs[1].style.display = 'none';
+
+    const observerReady = postItem.dataset.observerReady === 'true';
+    if (observerReady && !postItem.classList.contains('is--show')) {
+      postItem.classList.add('is--show');
+    }
+
+    if (postItem.classList.contains('is--show')) {
+      keptCanvases.add(el);
+
+      const typingElement = postItem.querySelector('.js-typing');
+      if (typingElement && postItem.dataset.typed !== 'true') {
+        postItem.dataset.typed = 'true';
+        typingElement.style.setProperty('opacity', '1');
+        runTypingAnimation(typingElement);
+      }
+    }
+
+    isInitializing.delete(el);
+  });
+}
+
+function waitForThumbImages(imgs) {
+  return Promise.all(Array.from(imgs).map(img => {
+    if (typeof img.decode === 'function') {
+      return img.decode().catch(() => {});
+    }
+    return new Promise(resolve => {
+      if (img.complete) {
+        resolve();
+      } else {
+        img.onload = resolve;
+        img.onerror = resolve;
+      }
+    });
+  }));
+}
+
 // 完全な遅延読み込みでHoverEffectを初期化
 function initHoverEffectForThumb(el) {
   // 既にリソースが存在する場合は再初期化しない
@@ -312,7 +376,13 @@ function initHoverEffectForThumb(el) {
       keptCanvases.delete(oldestKept);
       // console.log('Freed one kept canvas to init new HoverEffect');
     } else {
-      // console.log('Max WebGL contexts reached, skipping');
+      if (!retryInitTimers.has(el)) {
+        const t = setTimeout(() => {
+          retryInitTimers.delete(el);
+          initHoverEffectForThumb(el);
+        }, 400);
+        retryInitTimers.set(el, t);
+      }
       return;
     }
   }
@@ -347,21 +417,26 @@ function initHoverEffectForThumb(el) {
     return;
   }
 
-    const imgPromises = Array.from(imgs).map(img => {
-      return new Promise(resolve => {
-        if (img.complete) {
-          resolve();
-        } else {
-          img.onload = resolve;
-          img.onerror = resolve;
-        }
-      });
-    });
+    const imgPromises = waitForThumbImages(imgs);
 
-	Promise.all(imgPromises).then(() => {
+	Promise.all([imgPromises]).then(() => {
     if (hoverEffectInstances.has(el)) {
       // console.log('HoverEffect already exists, skipping initialization for:', el);
       isInitializing.delete(el);
+      return;
+    }
+
+    // naturalWidthが0の場合はデコード未完了の可能性があるので再試行
+    const img1 = imgs[0];
+    if (!img1.naturalWidth || !img1.naturalHeight) {
+      isInitializing.delete(el);
+      if (!retryInitTimers.has(el)) {
+        const t = setTimeout(() => {
+          retryInitTimers.delete(el);
+          initHoverEffectForThumb(el);
+        }, 200);
+        retryInitTimers.set(el, t);
+      }
       return;
     }
     
@@ -412,65 +487,25 @@ function initHoverEffectForThumb(el) {
 	    image2: imgs[1].getAttribute('src'),
 	    displacementImage: el.dataset.displacement,
 	    correctWidth: parseInt(el.dataset.correctWidth),
-	    correctHeight: parseInt(el.dataset.correctHeight)
+	    correctHeight: parseInt(el.dataset.correctHeight),
+	    onTexturesReady: (err) => {
+	      if (err || hoverEffectInstances.get(el) !== hoverEffect) {
+	        console.warn('HoverEffect init failed, keeping fallback images:', err);
+	        hoverEffectInstances.delete(el);
+	        isInitializing.delete(el);
+	        try {
+	          hoverEffect.destroy();
+	        } catch (destroyError) {
+	          console.warn('Error destroying failed HoverEffect:', destroyError);
+	        }
+	        return;
+	      }
+	      revealThumbCanvas(el, hoverEffect, imgs);
+	    }
 	  });
     
     // インスタンスを保存
     hoverEffectInstances.set(el, hoverEffect);
-    isInitializing.delete(el);
-    
-    // 裏でレンダリング準備が完了したら画像を切り替え
-    // スマホでのクラッシュ対策のため遅延を大幅調整
-    const delay = window.innerWidth <= 767 ? 500 : 200;
-    setTimeout(() => {
-      // レンダリング準備完了フラグを設定
-      const postItem = el.closest('.p-postList__item');
-      if (!postItem) return;
-      
-      postItem.dataset.renderReady = 'true';
-      
-      // is--show付与前の大きいサイズでCanvasを作成
-      const observerReady = postItem.dataset.observerReady === 'true';
-      const shouldShow = observerReady && !postItem.classList.contains('is--show');
-      
-      // 第1画像を非表示にしてcanvasを表示
-      imgs[0].style.display = 'none';
-      imgs[1].style.display = 'none';
-      
-      // 新しく作成されたCanvasは1枚目の画像から開始
-      if (hoverEffect.uniforms && hoverEffect.uniforms.dispFactor) {
-        hoverEffect.uniforms.dispFactor.value = 0;
-      }
-      
-      // 保存された正しいサイズでリサイズ（高品質）
-      hoverEffect.onResize(true); // useCorrectSize = true
-      
-      // resizeイベントリスナーを登録
-      if (hoverEffect.resizeHandler) {
-        window.addEventListener('resize', hoverEffect.resizeHandler);
-      }
-      
-      // Canvasを表示
-      hoverEffect.fadeIn();
-      
-      // is--show付与（親要素サイズが変わるが、Canvasは大きいサイズを保持）
-      if (shouldShow) {
-        postItem.classList.add('is--show');
-      }
-      
-      // タイピングアニメーションも開始（is--show付与後）
-      if (shouldShow) {
-        // ハイブリッド管理：新しく作成されたCanvasを保持リストに追加
-        keptCanvases.add(el);
-        
-        const typingElement = postItem.querySelector('.js-typing');
-        if (typingElement && postItem.dataset.typed !== 'true') {
-          postItem.dataset.typed = 'true';
-          typingElement.style.setProperty('opacity', '1');
-          runTypingAnimation(typingElement);
-        }
-      }
-    }, delay);
   });
   
   // グローバル管理に追加
@@ -494,7 +529,13 @@ function destroyHoverEffectForThumb(el, keepCanvas = false) {
       const elCanvas = hoverEffect.renderer.domElement;
       elCanvas.style.visibility = 'hidden';
       elCanvas.style.opacity = '0';
-      // console.log('Canvas hover out and kept hidden for:', el);
+
+      // Canvas非表示中は<img>をフォールバック表示（白抜け防止）
+      const imgs = el.querySelectorAll('img');
+      if (imgs[0]) imgs[0].style.display = 'block';
+      if (imgs[1]) imgs[1].style.display = 'none';
+      const postItem = el.closest('.p-postList__item');
+      if (postItem) postItem.dataset.renderReady = 'false';
     } else {
       // 完全破棄
       hoverEffect.destroy();
@@ -554,7 +595,14 @@ function showKeptCanvas(el) {
     }
     // 滑らかなfade-in表示
     hoverEffect.fadeIn();
-    // console.log('Kept canvas shown with fade-in (1st image) for:', el);
+
+    const imgs = el.querySelectorAll('img');
+    const postItem = el.closest('.p-postList__item');
+    requestAnimationFrame(() => {
+      if (imgs[0]) imgs[0].style.display = 'none';
+      if (imgs[1]) imgs[1].style.display = 'none';
+      if (postItem) postItem.dataset.renderReady = 'true';
+    });
     return true;
   }
   return false;

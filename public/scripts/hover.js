@@ -16,8 +16,16 @@ class HoverEffect {
         // 正しいCanvas幅をdata属性から取得（劣化対策）
         this.correctCanvasWidth = opts.correctWidth || null;
         this.correctCanvasHeight = opts.correctHeight || null;
+        this.onTexturesReady = opts.onTexturesReady || null;
+        this.isTexturesReady = false;
 
         this.init();
+    }
+
+    notifyReady(err) {
+        if (this.isTexturesReady) return;
+        this.isTexturesReady = true;
+        if (this.onTexturesReady) this.onTexturesReady(err || null);
     }
 
     // 画像中心を切り出してテクスチャ作成（スマホのみ、GPU負荷削減）
@@ -89,18 +97,36 @@ class HoverEffect {
     }
 
     init() {
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        // PixelRatioはonResizeで設定（サイズ確定後）
-        this.parent.appendChild(this.renderer.domElement);
+        try {
+            this.scene = new THREE.Scene();
+            this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            // PixelRatioはonResizeで設定（サイズ確定後）
+            this.parent.appendChild(this.renderer.domElement);
+        } catch (error) {
+            console.warn('WebGL initialization failed:', error);
+            this.notifyReady(error);
+            return;
+        }
 
         // 画像中心を切り出してテクスチャ作成（GPU負荷削減）
         this.loadAndCropImage(this.image1, (tex1) => {
             this.loadAndCropImage(this.image2, (tex2) => {
                 // displacementは切り出さない
                 const loader = new THREE.TextureLoader();
-                loader.load(this.displacementImage, (dispTex) => {
+                loader.load(
+                    this.displacementImage,
+                    (dispTex) => {
+                    if (!tex1 || !tex2 || !dispTex) {
+                        console.warn('Texture load incomplete:', {
+                            image1: this.image1,
+                            image2: this.image2,
+                            displacement: this.displacementImage
+                        });
+                        this.notifyReady(new Error('Texture load failed'));
+                        return;
+                    }
+
                     this.texture1 = tex1;
                     this.texture2 = tex2;
                     this.disp = dispTex;
@@ -137,7 +163,18 @@ class HoverEffect {
                     // リサイズイベントリスナーを保存（is--show付与後に登録される）
                     // 常に正しいサイズを使用（劣化対策）
                     this.resizeHandler = () => this.onResize(true);
-                });
+
+                    if (this.renderer && this.scene && this.camera) {
+                        this.renderer.render(this.scene, this.camera);
+                    }
+                    this.notifyReady(null);
+                },
+                undefined,
+                (error) => {
+                    console.warn('Failed to load displacement image:', this.displacementImage, error);
+                    this.notifyReady(error || new Error('Displacement load failed'));
+                }
+                );
             });
         });
     }
