@@ -58,6 +58,6 @@ copyText: |
 
 
 
-<p class="p-postContents__text c-postContents__text01">MIZUNO Shibuya City 26 Away<br>/ ミズノ 渋谷シティ 2026 アウェイキット</p>
+<p class="p-postContents__text c-postContents__text01">MIZUNO Shibuya City 26 Away<br>/ ミズノ 渋谷シティ 2026 アウェイキット </p>
 
 <p class="p-postContents__text c-postContents__text02">グリーンマンのN<span class="mr-01">a</span>tsでした。</p>
