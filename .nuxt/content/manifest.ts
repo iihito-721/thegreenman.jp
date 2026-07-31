@@ -1,5 +1,5 @@
 export const checksums = {
-  "rockerRoom": "v3.5.0--YSEl_3a8MI3MT7mayl6gkL-ztm0nGLuQ1ZKtzXktEs4"
+  "rockerRoom": "v3.5.0--KM0ykVgIJjEjpA9v7HHjK4mpuaIZqy2MgNtuxBq85mk"
 }
 export const checksumsStructure = {
   "rockerRoom": "wbgtmbaq0fyEpCH2hLuXNF_dLz2ova6WHbGToO0fpzA"

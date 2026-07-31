@@ -11,7 +11,7 @@ bgtext: 08-09　
 date: 2026.7.1
 copyText: |
   Kawaiiチェックパターン<br>
-  絶妙なグレイに合わせる<br>
+  絶妙なグレイ<br>
   リバプールRED
 ---
 		
