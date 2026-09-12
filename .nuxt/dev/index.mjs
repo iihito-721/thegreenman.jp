@@ -1493,7 +1493,7 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 }
 
 const checksums = {
-  "rockerRoom": "v3.5.0--sngZHk40JQP68rV1ES4fMQIdo-ezDNITJG5yJsza9E0"
+  "rockerRoom": "v3.5.0--8YXuPZgRfjzSE58rV3uGNXQCuLNFjdv7axTe_x1DYuc"
 };
 const checksumsStructure = {
   "rockerRoom": "wbgtmbaq0fyEpCH2hLuXNF_dLz2ova6WHbGToO0fpzA"
@@ -2158,7 +2158,7 @@ const posts = defineEventHandler(async (event) => {
       const fileContent = readFileSync(filePath, "utf-8");
       const { data, content } = matter(fileContent);
       return {
-        _path: `/the-rocker-room/${file.replace(".md", "")}`,
+        _path: `/the-rocker-room/${data.slug || file.replace(".md", "")}`,
         title: data.title,
         description: data.description,
         slug: data.slug,

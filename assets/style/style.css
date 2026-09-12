@@ -265,8 +265,8 @@ Post
 	
 	.p-postContents__text{line-height:1.9;font-size:14px;text-align:justify;}
 	.p-postContents__text br{display:none;}
-	.c-postContents__text01{padding:5vh 4vw 10vh 20vh;}
-	.c-postContents__text02{padding:5vh 8vw 10vh;}
+	.c-postContents__text01{padding:5vh 4vw 5vh 20vh;}
+	.c-postContents__text02{padding:5vh 8vw 5vh;}
 
 	.c-postContents__imgs01{padding:1vh 0;}
 	}
