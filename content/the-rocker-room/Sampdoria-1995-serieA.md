@@ -1,5 +1,5 @@
 ---
-title: サンプドリア１９９５ / UC Sampdoria 1995 SerieA
+title: UC Sampdoria 1995 SerieA / ASICS
 description: サンプドリア１９９５
 slug: Sampdoria-1995-serieA
 tags: ["Sampdoria","serieA","blue","90s","acisc"]
