@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
       const { data, content } = matter(fileContent)
       
       return {
-        _path: `/the-rocker-room/${file.replace('.md', '')}`,
+        _path: `/the-rocker-room/${data.slug || file.replace('.md', '')}`,
         title: data.title,
         description: data.description,
         slug: data.slug,
