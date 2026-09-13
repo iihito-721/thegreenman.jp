@@ -15,7 +15,7 @@ copyText: |
   傑作
 ---
 
-<p class="p-postContents__text c-postContents__text01">　こんにちは。グリーンマンのNatsです。<br>2年ぶりの新しいスパイクをご紹介。</p>
+<p class="p-postContents__text c-postContents__text01">　こんにちは。グリーンマンのNatsです。2年ぶりの新しいスパイクをご紹介。</p>
 					
 <img class="p-postThumb__img c-imageContainer" src="/images/the-rocker-room/Mercurial-Superfly-10-Elite/L1004542_s.jpg" alt="NIKE Zoom Mercurial Superfly 10 Elite FG">
 
