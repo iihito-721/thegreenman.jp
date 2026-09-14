@@ -16,10 +16,10 @@
 
     <main class="main">
 		<section class="c-mainContainer">
-			<div class="p-post__next" :class="{ 'is--hide': isLastItemReached }">NEXT<span><</span><span><</span><span><</span></div>
+			<div class="p-post__next" :class="{ 'is--hide': isLastItemReached }">NEXT<span>&lt;</span><span>&lt;</span><span>&lt;</span></div>
 		
 			<ul class="p-postList">
-			<li v-for="(post, index) in posts" :key="post._path" class="p-postList__item">
+			<li v-for="(post, index) in (posts ?? [])" :key="post._path" class="p-postList__item">
 				<div class="p-postList__meta">
 					<p class="p-postList__title is--fred js-repeat-text">
 						{{ repeatText(((post.bgtitle || '').trim() + ' '), 10) }}
@@ -70,22 +70,29 @@
 </template>
 
 <script setup lang="ts">
+const siteTitle = 'THE GREEN MAN | Football Kit, Photography & Culture'
+const siteDescription = 'サッカーキットを起点に、フットボールの文化と美意識を写真とストーリーで記録するインディペンデント・ビジュアルメディア、THE GREEN MAN。'
+
 useHead({
-  title: 'The GREEN MAM',
+  title: siteTitle,
   meta: [
     { name: 'viewport', content: 'width=device-width' },
     { name: 'format-detection', content: 'telephone=no' },
-    { name: 'copyright', content: '© The GREEN MAM' },
-    { property: 'og:title', content: 'The GREEN MAM' },
-    { property: 'og:type', content: 'article' },
+    { name: 'copyright', content: '© THE GREEN MAN' },
+    { name: 'description', content: siteDescription },
+    { property: 'og:title', content: siteTitle },
+    { property: 'og:description', content: siteDescription },
+    { property: 'og:type', content: 'website' },
     { property: 'og:url', content: 'https://thegreenman.jp/' },
     { property: 'og:image', content: 'https://thegreenman.jp/ogp.png' },
-    { property: 'og:site_name', content: 'The GREEN MAM' },
+    { property: 'og:site_name', content: 'THE GREEN MAN' },
     { property: 'og:locale', content: 'ja_JP' },
-    { name: 'twitter:card', content: 'summary_large_image' }
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: siteTitle },
+    { name: 'twitter:description', content: siteDescription }
   ],
   link: [
-    { rel: 'apple-touch-icon', href: 'https://thegreenman.jp//apple-touch-icon.png', sizes: '144x144' },
+    { rel: 'apple-touch-icon', href: 'https://thegreenman.jp/apple-touch-icon.png', sizes: '144x144' },
     { rel: 'shortcut icon', href: 'https://thegreenman.jp/favicon.ico' }
   ]
 })
@@ -95,32 +102,41 @@ function repeatText(text: string, count: number): string {
 }
 
 interface Post {
-  [x: string]:
-  /// <reference types="../node_modules/.vue-global-types/vue_3.5_0.d.ts" />
-  any;
-  _path: string;
-  title: string;
-  description: string;
-  slug: string;
-  tags: string[];
-  date: string;
-  cover: string;
-  hover: string;
-  copyText: string;
-  content: string;
-  bgtitle?: string;
-  bgtext?: string;
-  displacement?: string;
+  _path: string
+  title: string
+  description: string
+  slug: string
+  tags: string[]
+  date: string
+  cover: string
+  hover: string
+  copyText: string
+  content: string
+  bgtitle?: string
+  bgtext?: string
+  displacement?: string
 }
 
-const { data: posts } = await useAsyncData('posts', () => 
-  $fetch('/api/posts') as Promise<Post[]>
+type HoverEffectInstance = {
+  destroy: () => void
+}
+
+type TgmWindow = Window & {
+  hoverEffectInstances?: Map<Element, HoverEffectInstance>
+  intersectionObservers?: Set<IntersectionObserver>
+  gsap?: { killTweensOf: (target: string) => void }
+}
+
+const { data: posts } = await useAsyncData('posts', () =>
+  $fetch<Post[]>('/api/posts'),
+  { default: () => [] }
 )
 
 const isLastItemReached = ref(false)
+let lastItemObserver: IntersectionObserver | undefined
 
 onMounted(() => {
-  const observer = new IntersectionObserver(
+  lastItemObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         isLastItemReached.value = entry.isIntersecting
@@ -133,47 +149,39 @@ onMounted(() => {
 
   nextTick(() => {
     const postItems = document.querySelectorAll('.p-postList__item')
-    if (postItems.length > 0) {
-      const lastItem = postItems[postItems.length - 1]
-      observer.observe(lastItem)
+    const lastItem = postItems[postItems.length - 1]
+    if (lastItem && lastItemObserver) {
+      lastItemObserver.observe(lastItem)
     }
   })
+})
 
-  onUnmounted(() => {
-    observer.disconnect()
-    
-    // グローバルなクリーンアップ（メモリリーク防止）
-    if (typeof window !== 'undefined') {
-      // 全てのHoverEffectインスタンスを破棄
-      if (window.hoverEffectInstances) {
-        window.hoverEffectInstances.forEach((effect, el) => {
-          try {
-            effect.destroy()
-          } catch (error) {
-            console.warn('Error destroying HoverEffect:', error)
-          }
-        })
-        window.hoverEffectInstances.clear()
-      }
-      
-      // 全てのIntersectionObserverを切断
-      if (window.intersectionObservers) {
-        window.intersectionObservers.forEach(observer => {
-          try {
-            observer.disconnect()
-          } catch (error) {
-            console.warn('Error disconnecting observer:', error)
-          }
-        })
-        window.intersectionObservers.clear()
-      }
-      
-      // GSAPアニメーションのクリア
-      if (typeof gsap !== 'undefined') {
-        gsap.killTweensOf('*')
-      }
+onUnmounted(() => {
+  lastItemObserver?.disconnect()
+
+  if (typeof window === 'undefined') return
+
+  const tgmWindow = window as TgmWindow
+
+  tgmWindow.hoverEffectInstances?.forEach((effect) => {
+    try {
+      effect.destroy()
+    } catch (error) {
+      console.warn('Error destroying HoverEffect:', error)
     }
   })
+  tgmWindow.hoverEffectInstances?.clear()
+
+  tgmWindow.intersectionObservers?.forEach((obs) => {
+    try {
+      obs.disconnect()
+    } catch (error) {
+      console.warn('Error disconnecting observer:', error)
+    }
+  })
+  tgmWindow.intersectionObservers?.clear()
+
+  tgmWindow.gsap?.killTweensOf('*')
 })
 
 

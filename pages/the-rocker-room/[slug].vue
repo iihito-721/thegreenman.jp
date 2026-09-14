@@ -124,14 +124,19 @@ if (!article.value) {
   })
 }
 
-// SEO対策
+const articleTitle = `${article.value?.title} | THE GREEN MAN`
+const articleDescription = `${stripHtml(article.value?.copyText)}。${article.value?.description}。THE GREEN MANの写真で記録。`
+
 useHead({
-  title: article.value?.title,
+  title: articleTitle,
   meta: [
-    { name: 'description', content: article.value?.description },
-    { property: 'og:title', content: article.value?.title },
-    { property: 'og:description', content: article.value?.description },
-    { property: 'og:image', content: article.value?.cover }
+    { name: 'description', content: articleDescription },
+    { property: 'og:title', content: articleTitle },
+    { property: 'og:description', content: articleDescription },
+    { property: 'og:image', content: article.value?.cover },
+    { property: 'og:site_name', content: 'THE GREEN MAN' },
+    { name: 'twitter:title', content: articleTitle },
+    { name: 'twitter:description', content: articleDescription }
   ]
 })
 
@@ -197,6 +202,13 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
 })
+
+function stripHtml(text?: string): string {
+  return (text ?? '')
+    .replace(/<br\s*\/?>/gi, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, '')
+}
 
 function repeatText(text: string, count: number): string {
   return text.repeat(count)

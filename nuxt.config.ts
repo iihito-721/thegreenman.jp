@@ -30,8 +30,11 @@ export default defineNuxtConfig({
   ],
   app: {
     head: {
-      title: 'The GREEN MAM',
-      meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }],
+      title: 'THE GREEN MAN | Football Kit, Photography & Culture',
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'サッカーキットを起点に、フットボールの文化と美意識を写真とストーリーで記録するインディペンデント・ビジュアルメディア、THE GREEN MAN。' }
+      ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
