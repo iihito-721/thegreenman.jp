@@ -656,7 +656,7 @@ const _inlineRuntimeConfig = {
   },
   "public": {
     "content": {
-      "wsUrl": "ws://localhost:4002/"
+      "wsUrl": "ws://localhost:4000/"
     },
     "mdc": {
       "components": {
@@ -1493,7 +1493,7 @@ async function decompressSQLDump(base64Str, compressionType = "gzip") {
 }
 
 const checksums = {
-  "rockerRoom": "v3.5.0--7KF2gzXBbHLduVIiCN_88aIZm5EgKtcEC18HAlZmPDI"
+  "rockerRoom": "v3.5.0--95QypPIlgS9jGDP8rx1mg9Vk9kzGJYIz8SMV8zoTZb4"
 };
 const checksumsStructure = {
   "rockerRoom": "wbgtmbaq0fyEpCH2hLuXNF_dLz2ova6WHbGToO0fpzA"
